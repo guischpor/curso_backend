@@ -1,17 +1,17 @@
-import 'package:curso_backend/core/servers_const/servers_const.dart';
-import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'dart:async';
 
-import 'server_handler.dart';
+import 'package:shelf/shelf.dart';
+
+import 'api/blog_api/blog_api.dart';
+import 'api/login_api/login_api.dart';
+import 'infra/custom_server.dart';
 
 void main() async {
-  ServerHandleR serverHandleR = ServerHandleR();
+  FutureOr<Response> Function(Request) cascadeHandler =
+      Cascade().add(LoginApi().handler).add(BlogApi().handler).handler;
 
-  final server = await shelf_io.serve(
-    serverHandleR.handler,
-    ServerConst.address,
-    ServerConst.port,
-  );
+  var handler =
+      Pipeline().addMiddleware(logRequests()).addHandler(cascadeHandler);
 
-  print(
-      'Servidor foi iniciado http://${ServerConst.address}:${ServerConst.port}!');
+  await CustomServer().initialize(handler);
 }
