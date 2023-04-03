@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class NoticiaModel {
-  final int id;
+  final int? id;
   final String titulo;
   final String descricao;
   final String imagem;
@@ -29,9 +27,9 @@ class NoticiaModel {
     };
   }
 
-  factory NoticiaModel.fromMap(Map<String, dynamic> map) {
+  factory NoticiaModel.fromJson(Map<String, dynamic> map) {
     return NoticiaModel(
-      id: map['id'] as int,
+      id: map['id'] ?? '',
       titulo: map['titulo'] as String,
       descricao: map['descricao'] as String,
       imagem: map['imagem'] as String,
@@ -42,11 +40,6 @@ class NoticiaModel {
           : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory NoticiaModel.fromJson(String source) =>
-      NoticiaModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
